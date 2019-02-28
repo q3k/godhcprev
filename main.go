@@ -17,6 +17,7 @@ type config struct {
 	listen       string
 	dnsForward   string
 	dnsReverseV6 string
+	ns           string
 }
 
 type server struct {
@@ -98,6 +99,7 @@ func main() {
 	flag.StringVar(&c.listen, "listen", "[::]:53", "DNS address to listen on")
 	flag.StringVar(&c.dnsForward, "dns_forward", "dyn.hackerspace.pl.", "DNS forward zone for dynamic leases")
 	flag.StringVar(&c.dnsReverseV6, "dns_reverse_v6", "2.4.2.4.2.4.2.4.0.0.b.e.d.0.a.2.ip6.arpa.", "DNS forward zone for dynamic leases")
+	flag.StringVar(&c.ns, "ns", "ns1.example.com", "Identity of this NS")
 	flag.Parse()
 	if err := c.check(); err != nil {
 		glog.Fatalf("Configuration error: %v", err)

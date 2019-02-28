@@ -9,7 +9,7 @@ import (
 )
 
 func (s *server) serveNS(r *dns.Msg) []dns.RR {
-	rr, err := dns.NewRR(fmt.Sprintf("%s 60 NS %s", r.Question[0].Name, "arbeit.q3k.org."))
+	rr, err := dns.NewRR(fmt.Sprintf("%s 60 NS %s", r.Question[0].Name, s.c.ns))
 	if err != nil {
 		glog.Errorf("NewRR: %v", err)
 		return []dns.RR{}
