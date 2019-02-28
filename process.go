@@ -8,11 +8,27 @@ import (
 	"github.com/miekg/dns"
 )
 
+func (s *server) serveNS(r *dns.Msg) []dns.RR {
+	rr, err := dns.NewRR(fmt.Sprintf("%s 60 NS %s", r.Question[0].Name, "arbeit.q3k.org."))
+	if err != nil {
+		glog.Errorf("NewRR: %v", err)
+		return []dns.RR{}
+	}
+
+	return []dns.RR{rr}
+}
+
 func (s *server) forwardV6For(r *dns.Msg) []dns.RR {
 	rrs := []dns.RR{}
 
 	question := ""
 	for _, q := range r.Question {
+		if q.Qtype == dns.TypeNS {
+			return s.serveNS(r)
+		}
+		if q.Qtype != dns.TypeAAAA && q.Qtype != dns.TypeA {
+			break
+		}
 		if strings.HasSuffix(q.Name, s.c.dnsForward) {
 			question = q.Name
 			break
